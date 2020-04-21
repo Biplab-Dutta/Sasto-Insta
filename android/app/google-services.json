@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "422160004474",
+    "firebase_url": "https://social-network-8db03.firebaseio.com",
+    "project_id": "social-network-8db03",
+    "storage_bucket": "social-network-8db03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422160004474:android:b8f0a008b200dadf7052c3",
+        "android_client_info": {
+          "package_name": "com.biplab.social_network"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422160004474-ja6ece0dvubmm36pvq8ribu3quglcemg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.biplab.social_network",
+            "certificate_hash": "a2abc1e7ebe0dfdf2160c8d030a08ae5ca428ffc"
+          }
+        },
+        {
+          "client_id": "422160004474-7aqbr96ult8qs3vfem7c6vuqpgd0q33t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKOjb7xF834srZVh-da7ZTUZJ8afwspHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422160004474-7aqbr96ult8qs3vfem7c6vuqpgd0q33t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
