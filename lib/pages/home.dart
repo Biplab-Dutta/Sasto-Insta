@@ -26,11 +26,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // return isAuth ? authScreen() : unAuthScreen();
-    if (isAuth == false)
-      return unAuthScreen();
-    else
-      return authScreen();
+    return isAuth ? authScreen() : unAuthScreen();
   }
 
   @override
@@ -58,6 +54,7 @@ class _HomeState extends State<Home> {
     setState(
       () {
         this.pageIndex = pageIndex;
+        FocusScope.of(context).unfocus();
       },
     );
   }
@@ -76,7 +73,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  logOut() async {
+  void logOut() async {
     try {
       await googleSignIn.signOut();
       setState(
