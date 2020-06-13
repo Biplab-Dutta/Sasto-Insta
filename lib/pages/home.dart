@@ -140,11 +140,13 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           //Timeline(),
           FlatButton(
-            onPressed: logOut,
+            onPressed: () {
+              logOut();
+            },
             child: Text('Logout'),
           ),
           ActivityFeed(),
-          Upload(),
+          Upload(currentUser: currentUser),
           Search(),
           Profile()
         ],
