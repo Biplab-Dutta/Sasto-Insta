@@ -13,30 +13,35 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  File file;
+  PickedFile pickedFile;
+  final picker = ImagePicker();
 
   openGallery() async {
     Navigator.pop(context);
-    file = await ImagePicker.pickImage(
+    pickedFile = await picker.getImage(
       source: ImageSource.gallery,
+      imageQuality: 70,
     );
+
     setState(
       () {
-        this.file = file;
+        this.pickedFile = pickedFile;
       },
     );
   }
 
   openCamera() async {
     Navigator.pop(context);
-    file = await ImagePicker.pickImage(
+    pickedFile = await picker.getImage(
       source: ImageSource.camera,
       maxHeight: 675,
       maxWidth: 960,
+      imageQuality: 70,
     );
+
     setState(
       () {
-        this.file = file;
+        this.pickedFile = pickedFile;
       },
     );
   }
@@ -107,11 +112,13 @@ class _UploadState extends State<Upload> {
 
   clearImage() {
     setState(() {
-      file = null;
+      pickedFile = null;
     });
   }
 
   Scaffold uploadPost() {
+    final File file = File(pickedFile.path);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -226,6 +233,6 @@ class _UploadState extends State<Upload> {
 
   @override
   Widget build(BuildContext context) {
-    return file == null ? buildUploadScreen() : uploadPost();
+    return pickedFile == null ? buildUploadScreen() : uploadPost();
   }
 }
