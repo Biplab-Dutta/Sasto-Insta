@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_network/models/user.dart';
+import 'package:social_network/widgets/progress.dart';
+import 'package:uuid/uuid.dart';
 
 class Upload extends StatefulWidget {
   final User currentUser;
@@ -13,8 +17,14 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
+  String postId = Uuid().v4();
+  final postsRef = Firestore.instance;
+  final storageRef = FirebaseStorage.instance.ref();
   PickedFile pickedFile;
   final picker = ImagePicker();
+  bool isUploading = false;
+  TextEditingController locationController = TextEditingController();
+  TextEditingController captionController = TextEditingController();
 
   openGallery() async {
     Navigator.pop(context);
@@ -116,9 +126,62 @@ class _UploadState extends State<Upload> {
     });
   }
 
+  Future<String> uploadImage(fileImage) async {
+    StorageUploadTask uploadTask =
+        storageRef.child("post_$postId.jpg").putFile(fileImage);
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    setState(
+      () {
+        isUploading = false;
+        pickedFile = null;
+        postId = Uuid().v4();
+      },
+    );
+    String downloadUrl = await storageSnap.ref.getDownloadURL();
+    final snackBar = SnackBar(
+      content: Text('Image uploaded in Firestore Storage'),
+    );
+
+    Scaffold.of(context).showSnackBar(snackBar);
+    return downloadUrl;
+  }
+
+  createPostInFirestore(
+      {String mediaUrl, String location, String description}) {
+    postsRef
+        .collection('posts')
+        .document(widget.currentUser.id)
+        .collection('userPosts')
+        .document(postId)
+        .setData({
+      "postId": postId,
+      "ownerId": widget.currentUser.id,
+      "username": widget.currentUser.username,
+      "mediaUrl": mediaUrl,
+      "location": location,
+      "description": description,
+      "timestamp": DateTime.now(),
+    });
+  }
+
+  handleSubmit() async {
+    final File file = File(pickedFile.path);
+    setState(
+      () {
+        isUploading = true;
+      },
+    );
+    String mediaUrl = await uploadImage(file);
+    createPostInFirestore(
+        mediaUrl: mediaUrl,
+        location: locationController.text,
+        description: captionController.text);
+    locationController.clear();
+    captionController.clear();
+  }
+
   Scaffold uploadPost() {
     final File file = File(pickedFile.path);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -147,12 +210,13 @@ class _UploadState extends State<Upload> {
                 fontSize: 20.0,
               ),
             ),
-            onPressed: () {},
+            onPressed: isUploading ? null : () => handleSubmit(),
           ),
         ],
       ),
       body: ListView(
         children: <Widget>[
+          isUploading ? linearProgress() : Text(""),
           Container(
             height: 220,
             width: MediaQuery.of(context).size.width * 0.8,
@@ -182,6 +246,7 @@ class _UploadState extends State<Upload> {
             title: Container(
               width: 250,
               child: TextField(
+                controller: captionController,
                 decoration: InputDecoration(
                   hintText: 'Write a caption...',
                   border: InputBorder.none,
@@ -199,6 +264,7 @@ class _UploadState extends State<Upload> {
             title: Container(
               width: 250,
               child: TextField(
+                controller: locationController,
                 decoration: InputDecoration(
                   hintText: "What is your current location?",
                   border: InputBorder.none,
