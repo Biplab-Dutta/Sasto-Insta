@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isAuth = false;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  final firestore = Firestore.instance;
+  final firestore = FirebaseFirestore.instance;
   int pageIndex = 0;
   PageController pageController = PageController();
   final DateTime dateTime = DateTime.now();
@@ -108,7 +108,7 @@ class _HomeState extends State<Home> {
 
   createUserInFirebase(GoogleSignInAccount user) async {
     DocumentSnapshot userId =
-        await firestore.collection('users').document(user.id).get();
+        await firestore.collection('users').doc(user.id).get();
     String username;
     if (!userId.exists) {
       username = await Navigator.push(
@@ -117,7 +117,7 @@ class _HomeState extends State<Home> {
           builder: (context) => CreateAccount(),
         ),
       );
-      firestore.collection('users').document(user.id).setData(
+      firestore.collection('users').doc(user.id).set(
         {
           "id": user.id,
           "username": username,
@@ -128,7 +128,7 @@ class _HomeState extends State<Home> {
           "timestamp": dateTime,
         },
       );
-      userId = await firestore.collection('users').document(user.id).get();
+      userId = await firestore.collection('users').doc(user.id).get();
     }
 
     currentUser = User.fromDocument(userId);

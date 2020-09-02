@@ -12,7 +12,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final firestore = Firestore.instance;
+  final firestore = FirebaseFirestore.instance;
   Future<QuerySnapshot> searchedUser;
   void handleSearch(String name) {
     Future<QuerySnapshot> users = firestore
@@ -21,7 +21,7 @@ class _SearchState extends State<Search> {
           'displayName',
           isGreaterThanOrEqualTo: name[0].toUpperCase() + name.substring(1),
         ) //converting 1st character of the name to uppercase.
-        .getDocuments();
+        .get();
     setState(
       () {
         searchedUser = users;
@@ -94,7 +94,7 @@ class _SearchState extends State<Search> {
           return circularProgress();
         }
         List<UserResult> searchResultInList = [];
-        snapshot.data.documents.forEach(
+        snapshot.data.docs.forEach(
           (doc) {
             User user = User.fromDocument(doc);
             UserResult searchResult = UserResult(user);

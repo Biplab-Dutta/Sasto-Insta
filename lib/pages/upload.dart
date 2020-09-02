@@ -18,7 +18,7 @@ class Upload extends StatefulWidget {
 
 class _UploadState extends State<Upload> {
   String postId = Uuid().v4();
-  final postsRef = Firestore.instance;
+  final postsRef = FirebaseFirestore.instance;
   final storageRef = FirebaseStorage.instance.ref();
   PickedFile pickedFile;
   final picker = ImagePicker();
@@ -150,10 +150,10 @@ class _UploadState extends State<Upload> {
       {String mediaUrl, String location, String description}) {
     postsRef
         .collection('posts')
-        .document(widget.currentUser.id)
+        .doc(widget.currentUser.id)
         .collection('userPosts')
-        .document(postId)
-        .setData({
+        .doc(postId)
+        .set({
       "postId": postId,
       "ownerId": widget.currentUser.id,
       "username": widget.currentUser.username,
