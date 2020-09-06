@@ -125,7 +125,7 @@ class UserResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).primaryColor.withOpacity(0.7),
-      child: Column(
+      child: ListView(
         children: <Widget>[
           GestureDetector(
             onTap: () {},
