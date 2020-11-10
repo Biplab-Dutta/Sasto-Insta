@@ -51,7 +51,7 @@ class _CreateAccountState extends State<CreateAccount> {
             child: Container(
               child: Form(
                 key: _formKey,
-                autovalidate: true,
+                autovalidateMode: AutovalidateMode.always,
                 child: TextFormField(
                   validator: (val) {
                     if (val.trim().length < 3 || val.isEmpty) {

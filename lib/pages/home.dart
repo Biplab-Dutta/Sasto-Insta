@@ -6,6 +6,7 @@ import 'package:social_network/pages/activity_feed.dart';
 import 'package:social_network/pages/create_account.dart';
 import 'package:social_network/pages/profile.dart';
 import 'package:social_network/pages/search.dart';
+import 'package:social_network/pages/timeline.dart';
 //import 'package:social_network/pages/timeline.dart';
 import 'package:social_network/pages/upload.dart';
 
@@ -138,17 +139,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          //Timeline(),
-          FlatButton(
-            onPressed: () {
-              logOut();
-            },
-            child: Text('Logout'),
-          ),
+          Timeline(),
           ActivityFeed(),
           Upload(currentUser: currentUser),
           Search(),
-          Profile()
+          Profile(profileId: currentUser?.id, currentUser: currentUser),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
@@ -158,26 +153,26 @@ class _HomeState extends State<Home> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.whatshot),
-            title: Text('Timeline'),
+            label: 'Timeline',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications_active),
-            title: Text('Actiivity Feed'),
+            label: 'Actiivity Feed',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.photo_camera,
               size: 35.0,
             ),
-            title: Text('Upload'),
+            label: 'Upload',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            title: Text('Search'),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            title: Text('Profile'),
+            label: 'Profile',
           ),
         ],
         onTap: onTap,

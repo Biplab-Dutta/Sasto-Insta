@@ -86,7 +86,7 @@ class _UploadState extends State<Upload> {
         });
   }
 
-  Container buildUploadScreen() {
+  Widget buildUploadScreen() {
     return Container(
       color: Theme.of(context).accentColor.withOpacity(0.6),
       child: Column(
@@ -127,16 +127,20 @@ class _UploadState extends State<Upload> {
   }
 
   Future<String> uploadImage(fileImage) async {
-    StorageUploadTask uploadTask =
+    UploadTask uploadTask =
         storageRef.child("post_$postId.jpg").putFile(fileImage);
-    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
-    setState(
+    TaskSnapshot storageSnap = await uploadTask.whenComplete(
       () {
-        isUploading = false;
-        pickedFile = null;
-        postId = Uuid().v4();
+        setState(
+          () {
+            isUploading = false;
+            pickedFile = null;
+            postId = Uuid().v4();
+          },
+        );
       },
     );
+
     String downloadUrl = await storageSnap.ref.getDownloadURL();
     final snackBar = SnackBar(
       content: Text('Image uploaded in Firestore Storage'),
@@ -180,7 +184,7 @@ class _UploadState extends State<Upload> {
     captionController.clear();
   }
 
-  Scaffold uploadPost() {
+  Widget uploadPost() {
     final File file = File(pickedFile.path);
     return Scaffold(
       appBar: AppBar(
